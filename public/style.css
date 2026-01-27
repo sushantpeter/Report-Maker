@@ -1,1 +1,140 @@
+/* ------------------------------
+   Global Styles
+--------------------------------*/
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f6f8;
+  color: #333;
+}
+
+/* ------------------------------
+   Header
+--------------------------------*/
+header {
+  background: #1f4e79;
+  color: #fff;
+  padding: 15px 25px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* ------------------------------
+   Layout
+--------------------------------*/
+.container {
+  max-width: 1100px;
+  margin: 25px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.section h2 {
+  font-size: 18px;
+  border-left: 5px solid #1f4e79;
+  padding-left: 10px;
+  margin-bottom: 15px;
+}
+
+/* ------------------------------
+   Forms
+--------------------------------*/
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+input[type="file"],
+select {
+  width: 100%;
+  padding: 7px;
+  margin-bottom: 12px;
+}
+
+button {
+  background: #1f4e79;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+button:hover {
+  background: #163a5a;
+}
+
+/* Secondary buttons */
+.btn-secondary {
+  background: #6c757d;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+}
+
+/* ------------------------------
+   Dynamic Upload Blocks
+--------------------------------*/
+.upload-block {
+  border: 1px dashed #bbb;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  background: #fafafa;
+}
+
+/* ------------------------------
+   Table (Preview / Report)
+--------------------------------*/
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  font-size: 13px;
+}
+
+table th {
+  background: #e9f0f6;
+  font-weight: 600;
+}
+
+/* ------------------------------
+   Checkbox grid (future column selector)
+--------------------------------*/
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+/* ------------------------------
+   Footer
+--------------------------------*/
+footer {
+  text-align: center;
+  padding: 12px;
+  font-size: 12px;
+  color: #777;
+}
 
