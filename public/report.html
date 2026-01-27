@@ -1,1 +1,27 @@
+<h2>Report Configuration</h2>
+
+<button onclick="generate()">Generate Report</button>
+
+<script>
+function generate() {
+  fetch("/generate-report", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      joinKeys: {
+        employee: "PatwariCode",
+        farmer: "PatwariCode",
+        bucket: "PatwariCode"
+      },
+      selectedCols: [
+        "TotalRegistrations",
+        "BucketClaimed"
+      ],
+      groupBy: "Tehsil"
+    })
+  })
+  .then(res => res.json())
+  .then(data => console.table(data));
+}
+</script>
 
