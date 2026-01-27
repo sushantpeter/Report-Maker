@@ -1,1 +1,32 @@
+<h2>Upload Data Files</h2>
+
+<form id="uploadForm">
+  Employee File:
+  <input type="file" name="employeeFile"><br><br>
+
+  Farmer Registry File:
+  <input type="file" name="farmerFile"><br><br>
+
+  PM Kisan Drill Down:
+  <input type="file" name="pmkisanFile" multiple><br><br>
+
+  Bucket Claimed Report:
+  <input type="file" name="bucketFile" multiple><br><br>
+
+  <button type="submit">Upload</button>
+</form>
+
+<script>
+document.getElementById("uploadForm").onsubmit = async e => {
+  e.preventDefault();
+  let formData = new FormData(e.target);
+
+  await fetch("/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  window.location = "report.html";
+};
+</script>
 
