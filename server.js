@@ -24,7 +24,11 @@ app.post("/upload", upload.any(), async (req, res) => {
     let filesData = {};
 
     for (let file of req.files) {
-      filesData[file.fieldname] = readExcel(file.path);
+      if (!filesData[file.fieldname]) {
+        filesData[file.fieldname] = [];
+        }
+
+      filesData[file.fieldname].push(readExcel(file.path));
     }
 
     // temporary global storage (later DB / session)
