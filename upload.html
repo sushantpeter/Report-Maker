@@ -1,0 +1,44 @@
+<h2>Upload Data Files</h2>
+
+<form id="uploadForm" onsubmit="event.preventDefault(); uploadFiles();">
+
+<div class="section">
+  <h2>PM Kisan Drill Down</h2>
+  <div id="pmKisanContainer">
+    <div class="upload-block">
+      <input type="file" name="pmkisanFile">
+    </div>
+  </div>
+  <button type="button" class="btn-secondary" onclick="addPmKisanUpload()">
+    + Add Tehsil
+  </button>
+</div>
+
+<div class="section">
+  <h2>Bucket Claimed Report</h2>
+  <div id="bucketContainer">
+    <div class="upload-block">
+      <input type="file" name="bucketFile">
+    </div>
+  </div>
+  <button type="button" class="btn-secondary" onclick="addBucketUpload()">
+    + Add Tehsil
+  </button>
+</div>
+
+<button type="submit">Upload & Continue</button>
+</form>
+
+<script>
+document.getElementById("uploadForm").onsubmit = async e => {
+  e.preventDefault();
+  let formData = new FormData(e.target);
+
+  await fetch("/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  window.location = "report.html";
+};
+</script>
