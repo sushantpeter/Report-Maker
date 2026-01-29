@@ -21,21 +21,34 @@ const upload = multer({ storage });
 /* ---------------- Upload API ---------------- */
 app.post("/upload", upload.any(), async (req, res) => {
   try {
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "No files received" });
+    }
+
     let filesData = {};
 
     for (let file of req.files) {
+
+      // same name की multiple files को array में डालना
       if (!filesData[file.fieldname]) {
         filesData[file.fieldname] = [];
-        }
+      }
 
-      filesData[file.fieldname].push(readExcel(file.path));
+      filesData[file.fieldname].push(
+        readExcel(file.path)
+      );
     }
 
-    // temporary global storage (later DB / session)
+    // global storage (temporary)
     global.uploadedData = filesData;
 
+    console.log("Uploaded Files:", Object.keys(filesData));
+
     res.json({ success: true });
+
   } catch (err) {
+    console.error("UPLOAD ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 });
