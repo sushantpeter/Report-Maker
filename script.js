@@ -40,26 +40,33 @@ document.getElementById("bucketInput")?.addEventListener("change", e => {
    Upload All Files
 ===================================================== */
 
-document.getElementById("uploadForm")?.addEventListener("submit", async e => {
-  e.preventDefault();
+document.addEventListener("DOMContentLoaded", () => {
 
-  const formData = new FormData(e.target);
+  const form = document.getElementById("uploadForm");
+  if (!form) return;
 
-  try {
-    const response = await fetch("/upload", {
-      method: "POST",
-      body: formData
-    });
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
 
-    if (!response.ok) {
-      throw new Error("Upload failed");
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("/upload", {
+        method: "POST",
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      alert("All files uploaded successfully ✅");
+      window.location.href = "report.html";
+
+    } catch (err) {
+      alert("Upload failed ❌");
+      console.error(err);
     }
+  });
 
-    alert("All files uploaded successfully ✅");
-    window.location.href = "report.html";
-
-  } catch (err) {
-    alert("Upload failed ❌");
-    console.error(err);
-  }
 });

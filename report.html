@@ -1,26 +1,66 @@
-<h2>Report Configuration</h2>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>Report Configuration</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-<button onclick="generate()">Generate Report</button>
+<header>
+  <h1>Report Configuration</h1>
+</header>
 
-<script>
-function generate() {
-  fetch("/generate-report", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      joinKeys: {
-        employee: "PatwariCode",
-        farmer: "PatwariCode",
-        bucket: "PatwariCode"
-      },
-      selectedCols: [
-        "TotalRegistrations",
-        "BucketClaimed"
-      ],
-      groupBy: "Tehsil"
-    })
-  })
-  .then(res => res.json())
-  .then(data => console.table(data));
-}
-</script>
+<div class="container">
+
+  <!-- Join Key Selection -->
+  <div class="section">
+    <h2>Join Key Selection</h2>
+
+    <label>Employee File Join Column</label>
+    <select id="empJoin"></select>
+
+    <div class="section">
+  <h2>Join Key Selection</h2>
+
+  <label>Employee ↔ Farmer Join Column</label>
+  <select id="empJoin"></select>
+
+  <label>Farmer Registry Join Column</label>
+  <select id="farmerJoin"></select>
+
+  <label>PM Kisan Join Column</label>
+  <select id="pmkisanJoin"></select>
+
+  <label>Bucket Claimed Join Column</label>
+  <select id="bucketJoin"></select>
+</div>
+
+  </div>
+
+  <!-- Group By -->
+  <div class="section">
+    <h2>Group Report By</h2>
+
+    <select id="groupBy">
+      <option value="Tehsil">Tehsil</option>
+      <option value="RI_Circle">RI Circle</option>
+      <option value="Patwari">Patwari</option>
+    </select>
+  </div>
+
+  <!-- Columns -->
+  <div class="section">
+    <h2>Select Columns for Report</h2>
+    <div id="columnCheckboxes" class="checkbox-grid"></div>
+  </div>
+
+  <button onclick="generateReport()">Generate Report</button>
+
+  <div id="reportPreview"></div>
+
+</div>
+
+<script src="report.js"></script>
+</body>
+</html>

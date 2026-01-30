@@ -22,36 +22,91 @@ const upload = multer({ storage });
 app.post("/upload", upload.any(), async (req, res) => {
   try {
 
+    // 1️⃣ Safety check
     if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ error: "No files received" });
+      return res.status(400).json({
+        error: "No files received"
+      });
     }
 
+    // 2️⃣ Container for all uploaded excel data
     let filesData = {};
 
+    // 3️⃣ Loop through each uploaded file
     for (let file of req.files) {
 
-      // same name की multiple files को array में डालना
+      // same fieldname की multiple files को array में रखें
       if (!filesData[file.fieldname]) {
         filesData[file.fieldname] = [];
       }
 
+      // excel read करके push करें
       filesData[file.fieldname].push(
-        readExcel(file.path)
+		file.fieldname === "employeeFile"
+		? readExcel(file.path, { skipFirstRow: true })
+        : readExcel(file.path)
       );
     }
 
-    // global storage (temporary)
+    // 4️⃣ Temporarily store globally
     global.uploadedData = filesData;
 
-    console.log("Uploaded Files:", Object.keys(filesData));
+    // 5️⃣ DEBUG LOG (बहुत ज़रूरी)
+    console.log("Uploaded file groups:");
+    console.log(Object.keys(filesData));
 
     res.json({ success: true });
 
   } catch (err) {
     console.error("UPLOAD ERROR:", err);
+    res.status(500).json({
+      error: err.message
+    });
+  }
+});
+
+
+/* ---------------- Get Columns API ---------------- */
+app.get("/get-columns", (req, res) => {
+  try {
+    if (!global.uploadedData) {
+      return res.status(400).json({ error: "No data uploaded yet" });
+    }
+
+    // Employee file (first file, first sheet)
+    const employeeSheets = global.uploadedData.employeeFile[0];
+    const empSheetName = Object.keys(employeeSheets)[0];
+    const empColumns = Object.keys(employeeSheets[empSheetName][0] || {});
+
+    // Farmer registry (first file, first sheet)
+    const farmerSheets = global.uploadedData.farmerFile[0];
+    const farmerSheetName = Object.keys(farmerSheets)[0];
+    const farmerColumns = Object.keys(farmerSheets[farmerSheetName][0] || {});
+
+    res.json({
+  employeeColumns: empColumns,
+  farmerColumns: farmerColumns,
+  pmkisanColumns: Object.keys(
+    global.uploadedData.pmkisanFiles[0][
+      Object.keys(global.uploadedData.pmkisanFiles[0])[0]
+    ][0] || {}
+  ),
+  bucketColumns: Object.keys(
+    global.uploadedData.bucketFiles[0][
+      Object.keys(global.uploadedData.bucketFiles[0])[0]
+    ][0] || {}
+  )
+});
+
+
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
+
+
+
 
 /* ---------------- Generate Report ---------------- */
 app.post("/generate-report", (req, res) => {
