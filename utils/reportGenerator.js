@@ -1,54 +1,44 @@
+const { mergeAllData } = require("./mergeData");
+
 /**
- * Main report generation logic
+ * Generate grouped report
  */
 function generateReport(uploadedData, config) {
 
   const {
-    joinKeys,     // { employee: "PatwariCode", farmer: "PatwariCode" }
+    joinKeys,
     selectedCols,
     groupBy
   } = config;
 
-  let employees = uploadedData.employeeFile.Sheet1;
-  let farmerData = uploadedData.farmerFile.Sheet1;
-  let bucketData = uploadedData.bucketFile.Sheet1;
+  // 1️⃣ Merge everything
+  const mergedData = mergeAllData(uploadedData, joinKeys);
 
-  /* ---------- Merge using Primary Key ---------- */
-  let merged = farmerData.map(f => {
-    let emp = employees.find(
-      e => e[joinKeys.employee] === f[joinKeys.farmer]
-    ) || {};
+  // 2️⃣ Grouping
+  const grouped = {};
 
-    let bucket = bucketData.find(
-      b => b[joinKeys.bucket] === f[joinKeys.farmer]
-    ) || {};
+  mergedData.forEach(row => {
+    const key = row[groupBy] || "UNKNOWN";
 
-    return {
-      ...f,
-      ...emp,
-      ...bucket
-    };
-  });
-
-  /* ---------- Grouping ---------- */
-  let grouped = {};
-  merged.forEach(row => {
-    let key = row[groupBy];
-    if (!grouped[key]) grouped[key] = [];
+    if (!grouped[key]) {
+      grouped[key] = [];
+    }
     grouped[key].push(row);
   });
 
-  /* ---------- Build Final Output ---------- */
-  let report = [];
+  // 3️⃣ Aggregation
+  const report = [];
+
   for (let key in grouped) {
-    let obj = {};
+    let obj = { [groupBy]: key };
+
     selectedCols.forEach(col => {
-      obj[col] = grouped[key].reduce(
-        (sum, r) => sum + Number(r[col] || 0),
-        0
-      );
+      obj[col] = grouped[key].reduce((sum, r) => {
+        const val = Number(r[col]);
+        return sum + (isNaN(val) ? 0 : val);
+      }, 0);
     });
-    obj[groupBy] = key;
+
     report.push(obj);
   }
 
@@ -56,4 +46,3 @@ function generateReport(uploadedData, config) {
 }
 
 module.exports = { generateReport };
-
